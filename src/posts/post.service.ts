@@ -51,6 +51,9 @@ export class PostService {
     return this.posts.filter(x => x.userId === id);
   }
 
+  public findMany = async (ids: number[]) => {
+    return this.posts.filter(x => ids.some(y => y === x.id));
+  }
   public updatePost(id: number, postInput: PostInput): Post {
     const index = this.posts.findIndex(x => x.id === id);
     this.posts[index].body = postInput.body;

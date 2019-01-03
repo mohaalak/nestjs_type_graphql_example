@@ -1,0 +1,16 @@
+{
+  schema: {
+    files: 'schema.gql',
+  },
+  query: {
+    files: [
+      
+      // [Embedded queries] gql tag files
+      {
+        match: { include: 'src/**/*.ts', ignore: '**/tests/**/*.js' },
+        parser: [ 'EmbeddedQueryParser', { startTag: 'gql`', endTag: '`' } ],
+      },
+      
+    ]
+  }
+}

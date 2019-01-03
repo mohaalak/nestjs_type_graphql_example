@@ -18,7 +18,10 @@ import {
   ForbiddenException,
 } from '@nestjs/common';
 import { AuthGuard } from 'src/common/AuthGaurd';
-
+import { AuthenticationError, ForbiddenError, gql } from 'apollo-server-core';
+import { Loader } from 'src/common/loader.decorator';
+import { UserLoader } from 'src/users/user.dataloader';
+import Dataloader from 'dataloader';
 @Resolver(type => Post)
 export class PostResolver {
   constructor(
@@ -59,13 +62,17 @@ export class PostResolver {
       throw new NotFoundException();
     }
     if (post.userId !== user.id) {
-      throw new ForbiddenException();
+      throw new ForbiddenException('This is not your post');
     }
     return this.postService.updatePost(id, postInput);
   }
 
+  @Loader(UserLoader)
   @FieldResolver(returns => User)
-  user(@Parent() post: Post): User {
-    return this.userService.findById(post.userId);
+  user(
+    @Parent() post: Post,
+    @Context('UserLoader') userLoader: Dataloader<number, User>,
+  ) {
+    return userLoader.load(post.userId);
   }
 }

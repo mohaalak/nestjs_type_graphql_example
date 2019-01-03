@@ -23,6 +23,9 @@ export class UserService {
     return this.users;
   }
 
+  public findMany = async (ids: number[]) => {
+    return this.users.filter(x => ids.some(y => x.id === y));
+  }
   public findById(id: number) {
     return this.users.find(x => x.id === id);
   }
